@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template, redirect
 
 import requests
 import os
@@ -10,17 +10,25 @@ DEBUG = True
 THREADED = True
 PORT = 8080
 API_KEY = ""
-
+ROOT_PATH = r"C:\Users\abish\Downloads\toscan"
+root_path = ROOT_PATH
 
 @app.route('/')
 def n3twatch_homepage():
-    return '<p>Hello, World!</p>', 200
+    return render_template("splash_page.html", path = root_path)
+
+@app.route("/path_updater", methods=["POST"])
+def n3twatch_path_updater():
+    global root_path
+    if request.form.get("submit")=="Submit":
+        root_path = request.form.get("root_path")
+    elif request.form.get("submit")=="Reset":
+        root_path=ROOT_PATH
+    return redirect("/")
 
 @app.route("/dwnld_state", methods=["POST"])
 def n3twatch_download_catcher():
-    root_path = r"C:\Users\abish\Downloads\toscan"
     if "download_state" and "path" in request.json:
-        print(root_path+ " "+ request.json["path"])
         if root_path in request.json["path"]:
             download_path = request.json["path"]
             print(f"Yeees, download complete at {download_path}")
