@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template, redirect
 
 import requests
 import os
@@ -10,34 +10,33 @@ DEBUG = True
 THREADED = True
 PORT = 8080
 API_KEY = ""
-
+ROOT_PATH = r"C:\Users\abish\Downloads\toscan"
+root_path = ROOT_PATH
 
 @app.route('/')
 def n3twatch_homepage():
-    return '<p>Hello, World!</p>', 200
+    return render_template("splash_page.html", path = root_path)
 
+@app.route("/path_updater", methods=["POST"])
+def n3twatch_path_updater():
+    global root_path
+    if request.form.get("submit")=="Submit":
+        root_path = request.form.get("root_path")
+    elif request.form.get("submit")=="Reset":
+        root_path=ROOT_PATH
+    return redirect("/")
 
-@app.route("/dwn", methods=["POST"])
+@app.route("/dwnld_state", methods=["POST"])
 def n3twatch_download_catcher():
-    if 'path' in request.json:
-        if path := request.json['path']:
-            print("New File Downloaded:", path)
-            with open(path, 'rb') as file:
-                headers = {
-                    "accept": "application/json",
-                    "x-apikey": API_KEY
-                }
-                scan_res = requests.post(
-                    "https://www.virustotal.com/api/v3/files",
-                    headers=headers,
-                    files={
-                        "file": (path, file)
-                    })
-                data_src = json.loads(scan_res.text)
-                data_url = data_src["data"]["links"]["self"]
-                result_res = requests.get(data_url, headers=headers)
-                print(result_res.text)
+    if "download_state" and "path" in request.json:
+        if root_path in request.json["path"]:
+            download_path = request.json["path"]
+            print(f"Yeees, download complete at {download_path}")
+        else:
+            print("Noooooo, my plan has failed")
     return jsonify({}), 200
+
+
 
 
 def main() -> None:
