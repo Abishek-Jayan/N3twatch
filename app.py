@@ -2,7 +2,9 @@ from flask import Flask, jsonify, request, render_template, redirect
 import requests
 import os
 import json
+from dotenv import load_dotenv
 
+load_dotenv()
 app = Flask(__name__)
 
 PORT = os.environ['PORT']
@@ -12,18 +14,21 @@ DEBUG = os.environ['DEBUG']
 THREADED = os.environ['THREADED']
 API_KEY = os.environ['API_KEY']
 root_path = ROOT_PATH
+safe_path = SAFE_PATH
 
 @app.route('/')
 def n3twatch_homepage():
-    return render_template("splash_page.html", path = root_path)
+    return render_template("splash_page.html", root_path = root_path, safe_path = safe_path)
 
 @app.route("/path_updater", methods=["POST"])
 def n3twatch_path_updater():
-    global root_path
+    global root_path, safe_path
     if request.form.get("submit")=="Submit":
         root_path = request.form.get("root_path")
+        safe_path = request.form.get("safe_path")
     elif request.form.get("submit")=="Reset":
         root_path=ROOT_PATH
+        safe_path=SAFE_PATH
     return redirect("/")
 
 @app.route("/dwnld_state", methods=["POST"])
@@ -42,17 +47,16 @@ def n3twatch_download_catcher():
             files = {
                 'file': (download_path, open(download_path, 'rb')),  # Adjust the 'image/jpeg' to match your file type
             }
-            response = requests.post("https://www.hybrid-analysis.com/api/v2/quick-scan/file", headers=headers, data=data, files=files).json()
+            response = requests.post(os.environ["API_FILE_UPLOAD_URL"], headers=headers, data=data, files=files).json()
             sha = response["sha256"]
-            response = requests.get(f"https://www.hybrid-analysis.com/api/v2/overview/{sha}/summary", headers=headers).json()
+            response = requests.get(os.environ["API_SUMMARY_URL"]+f"{sha}/summary", headers=headers).json()
             if response["threat_score"]:
                 print("Kill it with fire")
                 os.remove(download_path)
             else:
                 print("All clear")
                 filename = os.path.basename(download_path)
-                print(SAFE_PATH+filename)
-                os.rename(download_path, SAFE_PATH+filename)
+                os.rename(download_path, safe_path+filename)
         else:
             print("Noooooo, my plan has failed")
     return jsonify({}), 200

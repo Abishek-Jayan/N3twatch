@@ -1,13 +1,13 @@
-{% extends "base.html" %}
-
-{% block content %}
-<form action ="./path_updater" method="POST">
-    <div>
-        <label for="path">Path</label>
-        <input id="path" name="root_path" type="text" value={{path}}/>
-    </div>
-        <input type="submit" name="submit" value="Submit"/>
-        <input type="submit" name="submit" value="Reset"/>
+{% extends "base.html" %} {% block content %}
+<form action="./path_updater" method="POST">
+  <div>
+    <label for="root_path">Root Path</label>
+    <input id="root_path" name="root_path" type="text" value="{{root_path}}" />
+    <label for="safe_path">Safe Path</label>
+    <input id="safe_path" name="safe_path" type="text" value="{{safe_path}}" />
+  </div>
+  <input type="submit" name="submit" value="Submit" />
+  <input type="submit" name="submit" value="Reset" />
 </form>
 
 {% endblock %}
