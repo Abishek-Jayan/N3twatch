@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 load_dotenv()
 app = Flask(__name__)
 
+HOST = os.environ['HOST']
 PORT = os.environ['PORT']
 ROOT_PATH = os.environ['ROOT_PATH']
 SAFE_PATH = os.environ['SAFE_PATH']
@@ -66,8 +67,9 @@ def n3twatch_download_catcher():
 
 def main() -> None:
     # Server start
-    port = int(os.environ.get('PORT', PORT))
-    app.run(debug=DEBUG, threaded=THREADED, host='127.0.0.1', port=port)
+    port = int(PORT)
+    host = HOST
+    app.run(debug=DEBUG, threaded=THREADED, host=host, port=port)
 
 
 if __name__ == '__main__':
