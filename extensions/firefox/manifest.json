@@ -1,17 +1,16 @@
 {
-    "manifest_version": 2,
-    "name": "N3tWatch Tracker",
-    "version": "0.1",
-    "description": "Track downloads and sends non-confidential files to the N3twatch Server",
-    "permissions": [
-        "downloads",
-        "http://localhost/*",
-        "http://127.0.0.1/*"
-    ],
-    "background": {
-        "scripts": [
-            "bloodhound_tracker.js"
-        ],
-        "persistent": false
-    }
+  "manifest_version": 2,
+  "name": "N3tWatch Tracker",
+  "version": "0.1",
+  "description": "Track downloads and sends non-confidential files to the N3twatch Server",
+  "permissions": [
+    "downloads",
+    "http://localhost/*",
+    "http://127.0.0.1/*",
+    "https://www.hybrid-analysis.com/*"
+  ],
+  "background": {
+    "scripts": ["bloodhound_tracker.js"],
+    "persistent": false
+  }
 }

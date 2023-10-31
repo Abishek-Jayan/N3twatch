@@ -10,15 +10,10 @@ browser.downloads.onCreated.addListener(async (e) => {
   const headers = {
     "api-key": API_KEY,
     "Content-Type": "application/json",
-    "Access-Control-Allow-Origin": "*",
   };
   const data = {
     scan_type: "all",
-    url: e.url,
-    no_share_third_party: "",
-    allow_community_access: "",
-    comment: "",
-    submit_name: "",
+    url: e.url.trim(),
   };
 
   // Perform the POST request using the Fetch API
@@ -28,7 +23,6 @@ browser.downloads.onCreated.addListener(async (e) => {
       headers: headers,
       body: JSON.stringify(data),
     });
-
     if (response.ok) {
       const responseData = await response.json();
       const sha = responseData.sha256;
