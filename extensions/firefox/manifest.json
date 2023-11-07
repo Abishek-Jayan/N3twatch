@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "N3tWatch Tracker",
   "version": "0.1",
-  "description": "Track downloads and sends non-confidential files to the N3twatch Server",
+  "description": "Track downloads and only allows safe downloads",
   "permissions": [
     "downloads",
     "http://localhost/*",
@@ -11,6 +11,11 @@
   ],
   "background": {
     "scripts": ["bloodhound_tracker.js"],
-    "persistent": false
+    "persistent": true
+  },
+  "browser_action": {
+    "default_icon": "icons/mansory.png",
+    "default_title": "N3tWatch Tracker",
+    "default_popup": "popup/n3twatch.html"
   }
 }
